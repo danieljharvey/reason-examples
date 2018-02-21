@@ -1,71 +1,78 @@
-/* LENGTH */
+/* first let's 'open' List, meaning we can run length(...) instead of List.length(...) for the rest of this file */
+open List;
+
 let length: list('a) => int;
 /* Return the length (number of elements) of the given list. */
 
-let ans1 = length([1,2,3,4]);
-/* ans1 == 4 */
-let ans2 = length(["hello","world"]);
-/* ans2 == 2 */
+let ans1 = length([1,2,3,4]); /* ans1 == 4 */
+let ans2 = length(["hello","world"]); /* ans2 == 2 */
 
-/* HD */
 let hd: list('a) => 'a;
 /* Return the first element of the given list. Raise Failure "hd" if the list is empty. */
 
-let ans3 = hd([2,3,4,5]);
-/* ans3 == 2 */
-let ans4 = hd([]);
-/* Failure error - consider using an option-based version of this function instead */
+let ans3 = hd([2,3,4,5]); /* ans3 == 2 */
+let ans4 = hd([]); /* Failure error - consider using an option-based version of this function instead */
 
-/* TL */
 let tl: list('a) => list('a);
 /* Return the given list without its first element. Raise Failure "tl" if the list is empty. */
 
-let ans5 = tl([1,2,3,4]);
-/* ans5 = [2,3,4] */
-let ans6 = tl([]);
-/* Failure "tl" error - consider using an option-based version of this function instead */
+let ans5 = tl([1,2,3,4]); /* ans5 = [2,3,4] */
+let ans6 = tl([]); /* Failure "tl" error - consider using an option-based version of this function instead */
 
-/* NTH */
 let nth: (list('a), int) => 'a;
 /* Return the n-th element of the given list. The first element (head of the list) is at position 0. Raise Failure "nth" if the list is too short. Raise Invalid_argument "List.nth" if n is negative. */
 
-let ans7 = nth([1,2,3,4,5], 1);
-/* ans7 == 2 */
-let ans8 = nth([1,2,3,4,5], 5);
-/* Failure "nth" error - consider using an option-based version of this function instead */
-let ans9 = nth([1,2,3,4,5], -1);
-/* Invalid_argument "List.nth" - consider using an option-based version of this function instead */
+let ans7 = nth([1,2,3,4,5], 1); /* ans7 == 2 */
+let ans8 = nth([1,2,3,4,5], 5); /* Failure "nth" error - consider using an option-based version of this function instead */
+let ans9 = nth([1,2,3,4,5], -1); /* Invalid_argument "List.nth" - consider using an option-based version of this function instead */
 
-/* REV */
 let rev: list('a) => list('a);
 /* List reversal. */
 
-let ans10 = rev([1,2,3,4,5]);
-/* ans10 == [5,4,3,2,1] */
-let ans11 = rev(["bed","the","shit"]);
-/* ans11 == ["shit","the","bed"] */
+let ans10 = rev([1,2,3,4,5]); /* ans10 == [5,4,3,2,1] */
+let ans11 = rev(["bed","the","shit"]); /* ans11 == ["shit","the","bed"] */
 
 /* APPEND */
 let append: (list('a), list('a)) => list('a);
 /* Catenate two lists. Same function as the infix operator @. Not tail-recursive (length of the first argument). The @ operator is not tail-recursive either. */
 
+let ans12 = append([1,2,3], [4,5,6]); /* ans12 == [1,2,3,4,5,6] */
+let ans13 = append(["let's","plop","these"],["strings","together"]); /* ans13 == ["let's", "plop", "these", "strings","together"] */
+
 let rev_append: (list('a), list('a)) => list('a);
 /* List.rev_append l1 l2 reverses l1 and concatenates it to l2. This is equivalent to List.rev l1 @ l2, but rev_append is tail-recursive and more efficient. */
+
+let ans14 = rev_append([3,2,1], [4,5,6]); /* ans14 == [1,2,3,4,5,6] */
+let ans15 = rev_append(["how","this","is"], ["it","works?"]); /* ans15 == ["is","this","how","it","works?"] */
 
 let concat: list(list('a)) => list('a);
 /* Concatenate a list of lists. The elements of the argument are all concatenated together (in the same order) to give the result. Not tail-recursive (length of the argument + length of the longest sub-list). */
 
+let ans16 = concat([["nice","and"],["tidy"],["now"]]); /* ans16 == ["nice","and","tidy","now"] */
+let ans17 = concat([[1,2,3],[4],[],[5,6]]); /* ans17 == [1,2,3,4,5,6] */
+
 let flatten: list(list('a)) => list('a);
 /* Same as concat. Not tail-recursive (length of the argument + length of the longest sub-list). */
+let ans18 = flatten([["nice","and"],["tidy"],["now"]]); /* ans18 == ["nice","and","tidy","now"] */
+let ans19 = flatten([[1,2,3],[4],[],[5,6]]); /* ans19 == [1,2,3,4,5,6] */
+
 
 let iter: ('a => unit, list('a)) => unit;
 /* List.iter f [a1; ...; an] applies function f in turn to a1; ...; an. It is equivalent to begin f a1; f a2; ...; f an; () end. */
+iter(str => Js.Log(str), ["hello","from","reason"]); /* no return value, runs Js.Log("hello"); Js.Log("from"); Js.Log("reason"); */
 
 let iteri: ((int, 'a) => unit, list('a)) => unit;
 /* Same as List.iter, but the function is applied to the index of the element as first argument (counting from 0), and the element itself as second argument. */
+iteri((str,i) => Js.Log(string_of_int(i) ++ str), ["0hello","1from","2reason"]); /* no return value, runs Js.Log("0hello"); Js.Log("1from"); Js.Log("2reason"); Note the integer value i must be turned into a string and the ++ double add symbol for string concatenation */
 
 let map: ('a => 'b, list('a)) => list('b);
 /* List.map f [a1; ...; an] applies function f to a1, ..., an, and builds the list [f a1; ...; f an] with the results returned by f. Not tail-recursive. */
+let ans20 = map(str => str ++ "!!", ["now","i'm","excited"]); /* ans20 == ["now!!","i'm!!","excited!!"]; */
+/* the function to apply can be passed in too, like this... */
+let addExclaims = str => str ++ "!!!!";
+let ans21 = map(addExclaims, ["now","i'm","incredible","excited"]); /* ans20 == ["now!!!!","i'm!!!!","incredibly!!!!","excited!!!!"]; */
+
+
 
 let mapi: ((int, 'a) => 'b, list('a)) => list('b);
 /* Same as List.map, but the function is applied to the index of the element as first argument (counting from 0), and the element itself as second argument. Not tail-recursive. */
