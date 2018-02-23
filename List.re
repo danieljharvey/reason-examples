@@ -1,6 +1,7 @@
 /* ---LENGTH--- */
 let length: list('a) => int;
 /* Return the length (number of elements) of the given list. */
+
 List.length([1,2,3,4]);
 /* - : int = 4 */
 List.length(["hello","world"]);
@@ -9,6 +10,7 @@ List.length(["hello","world"]);
 /* ---HD--- */
 let hd: list('a) => 'a;
 /* Return the first element of the given list. Raise Failure "hd" if the list is empty. */
+
 List.hd([2,3,4,5]);
 /* - : int = 2 */
 List.hd([]);
@@ -17,6 +19,7 @@ List.hd([]);
 /* ---TL--- */
 let tl: list('a) => list('a);
 /* Return the given list without its first element. Raise Failure "tl" if the list is empty. */
+
 List.tl([1,2,3,4]);
 /* - : list(int) = [2, 3, 4] */
 List.tl([]);
@@ -25,6 +28,7 @@ List.tl([]);
 /* ---NTH--- */
 let nth: (list('a), int) => 'a;
 /* Return the n-th element of the given list. The first element (head of the list) is at position 0. Raise Failure "nth" if the list is too short. Raise Invalid_argument "List.nth" if n is negative. */
+
 List.nth([1,2,3,4,5], 1);
 /* - : int = 2 */
 List.nth([1,2,3,4,5], 5);
@@ -35,6 +39,7 @@ List.nth([1,2,3,4,5], -1);
 /* ---REV--- */
 let rev: list('a) => list('a);
 /* List reversal. */
+
 List.rev([1,2,3,4,5]);
 /* - : list(int) = [5, 4, 3, 2, 1] */
 List.rev(["bed","the","shit"]);
@@ -43,6 +48,7 @@ List.rev(["bed","the","shit"]);
 /* ---APPEND--- */
 let append: (list('a), list('a)) => list('a);
 /* Catenate two lists. Same function as the infix operator @. Not tail-recursive (length of the first argument). The @ operator is not tail-recursive either. */
+
 List.append([1,2,3], [4,5,6]);
 /* - : list(int) = [1, 2, 3, 4, 5, 6] */
 List.append(["let's","plop","these"],["strings","together"]);
@@ -51,6 +57,7 @@ List.append(["let's","plop","these"],["strings","together"]);
 /* ---REV_APPEND--- */
 let rev_append: (list('a), list('a)) => list('a);
 /* List.rev_append l1 l2 reverses l1 and concatenates it to l2. This is equivalent to List.rev l1 @ l2, but rev_append is tail-recursive and more efficient. */
+
 List.rev_append([3,2,1], [4,5,6]);
 /* - : list(int) = [1, 2, 3, 4, 5, 6] */
 List.rev_append(["how","this","is"], ["it","works?"]);
@@ -59,6 +66,7 @@ List.rev_append(["how","this","is"], ["it","works?"]);
 /* ---CONCAT--- */
 let concat: list(list('a)) => list('a);
 /* Concatenate a list of lists. The elements of the argument are all concatenated together (in the same order) to give the result. Not tail-recursive (length of the argument + length of the longest sub-list). */
+
 List.concat([["nice","and"],["tidy"],["now"]]);
 /* - : list(string) = ["nice", "and", "tidy", "now"] */
 List.concat([[1,2,3],[4],[],[5,6]]);
@@ -67,6 +75,7 @@ List.concat([[1,2,3],[4],[],[5,6]]);
 /* ---FLATTEN--- */
 let flatten: list(list('a)) => list('a);
 /* Same as concat. Not tail-recursive (length of the argument + length of the longest sub-list). */
+
 List.flatten([["nice","and"],["tidy"],["now"]]);
 /* - : list(string) = ["nice", "and", "tidy", "now"] */
 List.flatten([[1,2,3],[4],[],[5,6]]);
@@ -75,28 +84,30 @@ List.flatten([[1,2,3],[4],[],[5,6]]);
 /* ---ITER--- */
 let iter: ('a => unit, list('a)) => unit;
 /* List.iter f [a1; ...; an] applies function f in turn to a1; ...; an. It is equivalent to begin f a1; f a2; ...; f an; () end. */
+
 List.iter(str => Js.Log(str), ["hello","from","reason"]);
 /* no return value, runs Js.Log("hello"); Js.Log("from"); Js.Log("reason"); */
 
 /* ---ITERI--- */
 let iteri: ((int, 'a) => unit, list('a)) => unit;
 /* Same as List.iter, but the function is applied to the index of the element as first argument (counting from 0), and the element itself as second argument. */
+
 List.iteri((str,i) => Js.Log(string_of_int(i) ++ str), ["0hello","1from","2reason"]);
 /* no return value, runs Js.Log("0hello"); Js.Log("1from"); Js.Log("2reason"); Note the integer value i must be turned into a string and the ++ double add symbol for string concatenation */
 
 /* ---MAP--- */
 let map: ('a => 'b, list('a)) => list('b);
 /* List.map f [a1; ...; an] applies function f to a1, ..., an, and builds the list [f a1; ...; f an] with the results returned by f. Not tail-recursive. */
+
 List.map(str => str ++ "!!", ["now","i'm","excited"]);
 /* - : list(string) = ["now!!", "i'm!!", "excited!!"] */
-
-/* the function to apply can be passed in too, like this... */
 List.map(str => str ++ "!!!!", ["now","i'm","incredible","excited"]);
 /* - : list(string) = ["now!!!!", "i'm!!!!", "incredible!!!!", "excited!!!!"] */
 
 /* ---MAPI--- */
 let mapi: ((int, 'a) => 'b, list('a)) => list('b);
 /* Same as List.map, but the function is applied to the index of the element as first argument (counting from 0), and the element itself as second argument. Not tail-recursive. */
+
 List.mapi((index, item) => {
     string_of_int(index + 1) ++ ": " ++ item;
 }, ["List","Of","Things","With","Numbers"]);
@@ -107,20 +118,35 @@ List.mapi((index, item) => index * item, [1,2,3,4,5]);
 /* ---REV_MAP--- */
 let rev_map: ('a => 'b, list('a)) => list('b);
 /* List.rev_map f l gives the same result as List.rev (List.map f l), but is tail-recursive and more efficient. */
+
 List.rev_map(i => i * 2, [1,2,3,4,5]);
 /* - : list(int) = [10, 8, 6, 4, 2] */
 
 /* ---FOLD_LEFT--- */
 let fold_left: (('a, 'b) => 'a, 'a, list('b)) => 'a;
 /* List.fold_left f a [b1; ...; bn] is f (... (f (f a b1) b2) ...) bn. */
+
 List.fold_left((acc, value) => {
     acc ++ ":" ++ value
 }, "", ["words","to","put","together"]);
 /* - : string = ":words:to:put:together" */
+List.fold_left((acc, value) => {
+    acc + (value * 2)
+}, 0, [1,2,3,4,5]);
+/* - : int = 30 */
 
-
+/* ---FOLD_RIGHT--- */
 let fold_right: (('a, 'b) => 'b, list('a), 'b) => 'b;
 /* List.fold_right f [a1; ...; an] b is f a1 (f a2 (... (f an b) ...)). Not tail-recursive. */
+
+List.fold_right((acc, value) => {
+    acc ++ ":" ++ value
+}, ["words","to","put","together"],"");
+/* - : string = "words:to:put:together:" */
+List.fold_right((acc, value) => {
+    acc + (value * 2)
+}, [1,2,3,4,5], 0);
+/* - : int = 129 */
 
 let iter2: (('a, 'b) => unit, list('a), list('b)) => unit;
 /* List.iter2 f [a1; ...; an] [b1; ...; bn] calls in turn f a1 b1; ...; f an bn. Raise Invalid_argument if the two lists have different lengths. */
