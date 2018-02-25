@@ -148,20 +148,50 @@ List.fold_right((acc, value) => {
 }, [1,2,3,4,5], 0);
 /* - : int = 129 */
 
+/* ---ITER2--- */
 let iter2: (('a, 'b) => unit, list('a), list('b)) => unit;
 /* List.iter2 f [a1; ...; an] [b1; ...; bn] calls in turn f a1 b1; ...; f an bn. Raise Invalid_argument if the two lists have different lengths. */
 
+List.iter2((text, num) => {
+    Js.Log(string_of_int(num) ++ " " ++ text);
+}, ["horse","dogs","cats","sofa"],[1,2,10,1]);
+/* No return, will run Js.Log("1 horse"); Js.Log("2 dogs"); Js.Log("10 cats"); Js.Log("1 sofa"); */
+
+/* ---MAP2--- */
 let map2: (('a, 'b) => 'c, list('a), list('b)) => list('c);
 /* List.map2 f [a1; ...; an] [b1; ...; bn] is [f a1 b1; ...; f an bn]. Raise Invalid_argument if the two lists have different lengths. Not tail-recursive. */
 
+List.map2((text, num) => {
+    (string_of_int(num) ++ " " ++ text)
+}, ["horse","dogs","cats","sofa"],[1,2,10,1]);
+/* - : list(string) = ["1 horse", "2 dogs", "10 cats", "1 sofa"] */
+
+/* ---REV_MAP2--- */
 let rev_map2: (('a, 'b) => 'c, list('a), list('b)) => list('c);
 /* List.rev_map2 f l1 l2 gives the same result as List.rev (List.map2 f l1 l2), but is tail-recursive and more efficient. */
 
+List.rev_map2((text, num) => {
+    (string_of_int(num) ++ " " ++ text)
+}, ["horse","dogs","cats","sofa"],[1,2,10,1]);
+/* - : list(string) = ["1 sofa", "10 cats", "2 dogs", "1 horse"] */
+
+/* ---FOLD_LEFT2--- */
 let fold_left2: (('a, 'b, 'c) => 'a, 'a, list('b), list('c)) => 'a;
 /* List.fold_left2 f a [b1; ...; bn] [c1; ...; cn] is f (... (f (f a b1 c1) b2 c2) ...) bn cn. Raise Invalid_argument if the two lists have different lengths. */
 
+List.fold_left2((acc, a, b) => (acc + a + b), 0, [1,2,3,4,5], [0,1,0,1,0]);
+/* - : int = 17 */
+List.fold_left2((acc, a, b) => (acc + a + b), 0, [1,2,3,4,5], [0,1,0,1]);
+/* Exception: Invalid_argument("List.fold_left2"). */
+
+/* ---FOLD_RIGHT2--- */
 let fold_right2: (('a, 'b, 'c) => 'c, list('a), list('b), 'c) => 'c;
 /* List.fold_right2 f [a1; ...; an] [b1; ...; bn] c is f a1 b1 (f a2 b2 (... (f an bn c) ...)). Raise Invalid_argument if the two lists have different lengths. Not tail-recursive. */
+
+List.fold_right2((acc, a, b) => (acc + a + b), [1,2,3,4,5], [0,1,0,1,2],0);
+/* - : int = 19 */
+List.fold_right2((acc, a, b) => (acc + a + b), [1,2,3,4,5], [0,1,0,1],0);
+/* Exception: Invalid_argument("List.fold_right2"). */
 
 let for_all: ('a => bool, list('a)) => bool;
 /* for_all p [a1; ...; an] checks if all elements of the list satisfy the predicate p. That is, it returns (p a1) && (p a2) && ... && (p an). */
