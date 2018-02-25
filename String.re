@@ -59,12 +59,19 @@ String.sub("not very well", -1, 4);
 let blit: (string, int, bytes, int, int) => unit;
 /* Same as Bytes.blit_string. */
 
-
+/* --- CONCAT --- */
 let concat: (string, list(string)) => string;
 /* String.concat sep sl concatenates the list of strings sl, inserting the separator string sep between each. Raise Invalid_argument if the result is longer than Sys.max_string_length bytes. */
 
+String.concat(", ", ["plop", "slop", "drop"]);
+/* - : string = "plop, slop, drop" */
+
+/* --- ITER --- */
 let iter: (char => unit, string) => unit;
 /* String.iter f s applies function f in turn to all the characters of s. It is equivalent to f s.[0]; f s.[1]; ...; f s.[String.length s - 1]; (). */
+
+String.iter(x => Js.Log(x), "dog");
+/* Runs Js.Log('d'); Js.Log('o'); Js.Log('g'); */
 
 let iteri: ((int, char) => unit, string) => unit;
 /* Same as String.iter, but the function is applied to the index of the element as first argument (counting from 0), and the character itself as second argument. */
